@@ -1,0 +1,44 @@
+# Panel admin Pages CMS (https://app.pagescms.org)
+# Log masuk dengan GitHub, pilih repo ini, kemudian buka "Aktiviti Terkini".
+media:
+  input: images/aktiviti
+  output: /images/aktiviti
+  categories: [image]
+  rename: safe
+
+content:
+  - name: aktiviti
+    label: Aktiviti Terkini
+    description: Posting yang dipaparkan dalam bahagian "Aktiviti Terkini" di nazieraaziz.com. Posting terbaru (ikut tarikh) dipaparkan dahulu.
+    type: file
+    path: data/aktiviti.json
+    format: json
+    list: true
+    fields:
+      - name: tarikh
+        label: Tarikh
+        type: date
+        required: true
+      - name: tajuk
+        label: Tajuk
+        type: string
+        required: true
+      - name: cerita
+        label: Cerita
+        description: Tulis seperti biasa. Tinggalkan satu baris kosong untuk perenggan baharu.
+        type: text
+      - name: gambar
+        label: Gambar
+        description: Boleh pilih beberapa gambar sekali gus (sehingga 12). Gambar pertama menjadi gambar utama.
+        type: image
+        options:
+          multiple:
+            max: 12
+      - name: tajuk_en
+        label: Tajuk (English, pilihan)
+        description: Kosongkan jika tiada. Laman versi English akan guna tajuk BM.
+        type: string
+      - name: cerita_en
+        label: Cerita (English, pilihan)
+        description: Kosongkan jika tiada. Laman versi English akan guna cerita BM.
+        type: text
