@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "tarikh": "2026-11-25",
+    "tajuk": "TEST CERITA 1",
+    "cerita": "Cerita 1\n\nSambungan Cerita",
+    "gambar": [
+      "/images/aktiviti/download.png"
+    ]
+  }
+]
