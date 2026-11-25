@@ -190,15 +190,24 @@
   .posts { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); gap: 1.25rem; }
   .post { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; display: grid; align-content: start; }
   .post .cover { display: block; width: 100%; aspect-ratio: 4 / 3; padding: 0; border: 0; background: var(--tint); cursor: zoom-in; position: relative; }
-  .post .cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .post .cover img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
   .post .count { position: absolute; right: 0.625rem; bottom: 0.625rem; padding: 0.125rem 0.625rem; border-radius: 999px; background: rgba(20, 16, 26, 0.72); color: #fff; font: 600 0.8125rem/1.6 var(--body); }
   .post .body { padding: 1.125rem 1.25rem 1.375rem; display: grid; gap: 0.5rem; }
   .post time { font-size: 0.8125rem; font-weight: 600; color: var(--stage); }
   .post h3 { font-size: 1.25rem; line-height: 1.3; }
   .post .text { display: grid; gap: 0.625rem; color: var(--muted); font-size: 0.9875rem; }
+  .post .text a { color: var(--accent); overflow-wrap: anywhere; }
   .post .thumbs { display: flex; flex-wrap: wrap; gap: 0.375rem; padding-top: 0.25rem; }
   .post .thumbs button { width: 3.25rem; height: 3.25rem; padding: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--tint); cursor: zoom-in; }
   .post .thumbs img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .post { scroll-margin-top: 5rem; }
+  .post.is-target { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .post .share { display: grid; gap: 0.5rem; padding-top: 0.75rem; margin-top: 0.25rem; border-top: 1px solid var(--line); }
+  .post .share-label { font-size: 0.8125rem; font-weight: 600; color: var(--muted); }
+  .post .share-row { display: flex; flex-wrap: wrap; gap: 0.375rem; }
+  .post .share-row a, .post .share-row button { display: inline-flex; align-items: center; gap: 0.375rem; min-height: 2.25rem; padding: 0.25rem 0.75rem; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink); font: 500 0.8125rem/1 var(--body); text-decoration: none; cursor: pointer; }
+  .post .share-row a:hover, .post .share-row button:hover { border-color: var(--accent); color: var(--accent); }
+  .post .share-row svg { width: 1rem; height: 1rem; flex: none; fill: currentColor; }
   .more { justify-self: start; font: 600 0.9375rem var(--body); color: var(--accent); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 0.5rem 1.125rem; cursor: pointer; }
   .more:hover { border-color: var(--accent); }
   #aktiviti .content { max-width: none; }
@@ -480,12 +489,82 @@
       const i = el('img'); i.src = src; i.alt = alt; i.decoding = 'async'; if (!eager) i.loading = 'lazy'; return i;
     }
 
+    // Each post gets a stable anchor (#aktiviti-<tarikh>-<tajuk>) so a shared link opens that post.
+    const slug = p => 'aktiviti-' + (String(p.tarikh || '').slice(0, 10) + '-' + String(p.tajuk || ''))
+      .normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80);
+    const SITE = 'https://nazieraaziz.com/';
+    const ICONS = {
+      whatsapp: '<path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.5-.3Z"/>',
+      facebook: '<path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3v7A10 10 0 0 0 22 12Z"/>',
+      threads: '<path d="M16.7 11.1a7 7 0 0 0-.3-.1c-.2-3-1.8-4.7-4.6-4.7-1.7 0-3.1.7-3.9 2l1.5 1c.6-.9 1.6-1.1 2.4-1.1 1 0 1.7.3 2.2.9.3.4.6 1 .7 1.7a12 12 0 0 0-2.7-.1c-2.7.2-4.4 1.7-4.3 3.9.1 1.1.6 2 1.5 2.6.8.5 1.8.8 2.9.7 1.4-.1 2.5-.6 3.3-1.6.6-.7.9-1.7 1.1-2.9.7.4 1.100 1 1.4 1.6.5 1.1.5 2.8-.9 4.2-1.2 1.2-2.7 1.7-4.9 1.800-2.5 0-4.3-.8-5.5-2.3-1.1-1.4-1.7-3.4-1.7-6s.6-4.6 1.7-6c1.2-1.5 3-2.3 5.5-2.300s4.4.8 5.6 2.3c.6.7 1 1.7 1.3 2.8l1.8-.5c-.4-1.4-.9-2.6-1.7-3.6C17.6 2.1 15.2 1 12 1 8.9 1 6.5 2 4.9 4 3.500 5.8 2.8 8.3 2.8 11.4s.7 5.6 2.1 7.4C6.5 20.8 8.9 21.8 12 21.8c2.8 0 4.7-.7 6.3-2.3 2.1-2.1 2-4.7 1.3-6.3a5 5 0 0 0-2.9-2.1Zm-4.8 4.5c-1.1.1-2.3-.4-2.4-1.5 0-.8.6-1.7 2.5-1.8h.6c.7 0 1.3.1 1.9.2-.2 2.7-1.5 3-2.6 3.1Z"/>',
+      x: '<path d="M17.8 2.5h3.1l-6.8 7.7 8 10.6h-6.2l-4.9-6.4-5.6 6.4H2.3l7.2-8.3L1.8 2.5h6.4l4.4 5.9 5.2-5.9Zm-1.1 16.5h1.7L7.4 4.3H5.6L16.7 19Z"/>',
+      telegram: '<path d="M21.9 4.3 18.8 19c-.2 1-.8 1.3-1.7.8l-4.6-3.4-2.2 2.100c-.3.3-.5.5-1 .5l.3-4.7 8.6-7.8c.4-.3-.1-.5-.6-.2L7 13l-4.6-1.4c-1-.3-1-1 .2-1.5l17.9-6.9c.8-.3 1.6.2 1.4 1.1Z"/>',
+      linkedin: '<path d="M20.4 2H3.6A1.6 1.6 0 0 0 2 3.6v16.8A1.6 1.6 0 0 0 3.6 22h16.8a1.6 1.6 0 0 0 1.6-1.6V3.6A1.6 1.6 0 0 0 20.4 2ZM8 19H5V9.5h3V19ZM6.5 8.2a1.7 1.7 0 1 1 0-3.5 1.7 1.7 0 0 1 0 3.500ZM19 19h-3v-4.6c0-1.1 0-2.5-1.5-2.5S12.7 13 12.7 14.3V19h-3V9.5h2.8v1.3c.4-.8 1.4-1.5 2.9-1.5 3 0 3.6 2 3.6 4.6V19Z"/>',
+      link: '<path d="M10.6 13.4a1 1 0 0 1 0-1.4l3.5-3.5a1 1 0 1 1 1.4 1.4L12 13.4a1 1 0 0 1-1.4 0Zm-2.1 6.4a4.6 4.6 0 0 1-3.3-7.9l2.1-2.1a1 1 0 0 1 1.4 1.4l-2.1 2.1a2.6 2.6 0 0 0 3.7 3.7l2.1-2.1a1 1 0 0 1 1.4 1.4l-2.1 2.1a4.6 4.6 0 0 1-3.2 1.4Zm7.4-6.7a1 1 0 0 1-.7-1.7l2.1-2.1a2.6 2.6 0 0 0-3.7-3.7l-2.1 2.1a1 1 0 0 1-1.4-1.4l2.1-2.1a4.6 4.6 0 0 1 6.5 6.5l-2.1 2.1a1 1 0 0 1-.7.3Z"/>',
+      share: '<path d="M18 16a3 3 0 0 0-2.4 1.2l-6.7-3.4a3 3 0 0 0 0-1.6l6.7-3.4A3 3 0 1 0 15 7l-6.7 3.4a3 3 0 1 0 0 3.3L15 17a3 3 0 1 0 3-1Z"/>'
+    };
+    const icon = k => '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + ICONS[k] + '</svg>';
+
+    function shareBox(p, title) {
+      const url = SITE + '#' + slug(p);
+      const msg = title + ' | Naziera Aziz';
+      const u = encodeURIComponent(url), t = encodeURIComponent(msg), tu = encodeURIComponent(msg + '\n' + url);
+      const en = lang() === 'en';
+      const box = el('div', 'share');
+      box.append(el('span', 'share-label', en ? 'Share this activity' : 'Kongsi aktiviti ini'));
+      const row = el('div', 'share-row');
+      const link = (k, label, href) => {
+        const a = el('a'); a.href = href; a.target = '_blank'; a.rel = 'noopener';
+        a.innerHTML = icon(k); a.append(label);
+        a.setAttribute('aria-label', (en ? 'Share on ' : 'Kongsi di ') + label);
+        row.append(a);
+      };
+      if (navigator.share) {
+        const b = el('button'); b.type = 'button'; b.innerHTML = icon('share'); b.append(en ? 'Share…' : 'Kongsi…');
+        b.addEventListener('click', () => navigator.share({ title: msg, text: msg, url }).catch(() => {}));
+        row.append(b);
+      }
+      link('whatsapp', 'WhatsApp', 'https://wa.me/?text=' + tu);
+      link('facebook', 'Facebook', 'https://www.facebook.com/sharer/sharer.php?u=' + u);
+      link('threads', 'Threads', 'https://www.threads.net/intent/post?text=' + tu);
+      link('x', 'X', 'https://x.com/intent/post?text=' + t + '&url=' + u);
+      link('telegram', 'Telegram', 'https://t.me/share/url?url=' + u + '&text=' + t);
+      link('linkedin', 'LinkedIn', 'https://www.linkedin.com/sharing/share-offsite/?url=' + u);
+      const copy = el('button'); copy.type = 'button';
+      const copyLabel = en ? 'Copy link' : 'Salin pautan';
+      copy.innerHTML = icon('link'); copy.append(copyLabel);
+      copy.addEventListener('click', () => {
+        const done = () => { copy.lastChild.textContent = en ? 'Copied!' : 'Disalin!'; setTimeout(() => { copy.lastChild.textContent = copyLabel; }, 2000); };
+        if (navigator.clipboard) navigator.clipboard.writeText(url).then(done, () => window.prompt(copyLabel, url));
+        else window.prompt(copyLabel, url);
+      });
+      row.append(copy);
+      box.append(row);
+      return box;
+    }
+
+    // Open the post named in the URL hash (e.g. from a shared link), loading more pages if needed.
+    function focusHash() {
+      const id = decodeURIComponent(location.hash.slice(1));
+      if (!id.startsWith('aktiviti-')) return;
+      const i = posts.findIndex(p => slug(p) === id);
+      if (i < 0) return;
+      if (i >= shown) { shown = Math.ceil((i + 1) / PAGE) * PAGE; render(); }
+      const card = document.getElementById(id);
+      if (!card) return;
+      list.querySelectorAll('.is-target').forEach(c => c.classList.remove('is-target'));
+      card.classList.add('is-target');
+      card.scrollIntoView({ block: 'start' });
+    }
+    window.addEventListener('hashchange', focusHash);
+
     function render() {
       list.replaceChildren();
       const fmt = new Intl.DateTimeFormat(lang() === 'en' ? 'en-GB' : 'ms-MY', { day: 'numeric', month: 'long', year: 'numeric' });
       posts.slice(0, shown).forEach((p, idx) => {
         const title = pick(p, 'tajuk'), pics = imgs(p), d = toDate(p.tarikh);
         const card = el('article', 'post');
+        card.id = slug(p);
         if (pics.length) {
           const cover = el('button', 'cover'); cover.type = 'button';
           cover.setAttribute('aria-label', (lang() === 'en' ? 'View photos: ' : 'Lihat gambar: ') + title);
@@ -500,7 +579,15 @@
         const text = String(pick(p, 'cerita')).trim();
         if (text) {
           const box = el('div', 'text');
-          text.split(/\n\s*\n/).forEach(par => box.append(el('p', null, par.trim())));
+          text.split(/\n\s*\n/).forEach(par => {
+            // Turn web addresses in the story into links.
+            const para = el('p');
+            par.trim().split(/(https?:\/\/[^\s<>"]+[^\s<>".,;:!?)])/).forEach((part, j) => {
+              if (j % 2) { const a = el('a', null, part); a.href = part; a.target = '_blank'; a.rel = 'noopener'; para.append(a); }
+              else if (part) para.append(part);
+            });
+            box.append(para);
+          });
           body.append(box);
         }
         if (pics.length > 1) {
@@ -514,6 +601,7 @@
           });
           body.append(strip);
         }
+        body.append(shareBox(p, title));
         card.append(body);
         list.append(card);
       });
@@ -551,6 +639,7 @@
         render();
         section.hidden = false;
         document.getElementById('nav-aktiviti').hidden = false;
+        focusHash();
       })
       .catch(() => {});
   })();
