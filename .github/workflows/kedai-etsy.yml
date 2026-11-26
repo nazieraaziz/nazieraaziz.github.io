@@ -6,9 +6,6 @@ on:
   schedule:
     - cron: "17 */3 * * *"
   workflow_dispatch:
-  push:
-    branches: [claude/project-thread-0wy9bb]
-    paths: [scripts/kedai_etsy.py, .github/workflows/kedai-etsy.yml]
 
 permissions:
   contents: write
