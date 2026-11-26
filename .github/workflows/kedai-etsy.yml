@@ -1,0 +1,37 @@
+# Semak kedai Etsy The SEN Corner setiap 3 jam dan kemas kini bahagian Kedai
+# (data/kedai.json) jika ada listing baharu, ditukar atau dibuang.
+name: Kemas kini Kedai Etsy
+
+on:
+  schedule:
+    - cron: "17 */3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kedai-etsy
+  cancel-in-progress: false
+
+jobs:
+  kemas-kini:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Baca suapan RSS Etsy
+        run: python scripts/kedai_etsy.py
+      - name: Simpan jika ada perubahan
+        run: |
+          if git diff --quiet -- data/kedai.json; then
+            echo "Tiada listing baharu."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/kedai.json
+          git commit -m "Kemas kini produk Kedai daripada Etsy"
+          git push
