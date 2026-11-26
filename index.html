@@ -234,6 +234,16 @@
   .shop .btn { grid-column: 1 / -1; justify-self: start; display: inline-flex; align-items: center; gap: 0.5rem; min-height: 2.75rem; padding: 0.625rem 1.25rem; border-radius: 999px; background: var(--accent); color: var(--surface); font: 600 0.9375rem/1 var(--body); text-decoration: none; }
   .shop .btn:hover { filter: brightness(1.08); }
   .shop .btn svg { width: 1rem; height: 1rem; }
+  .products { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: 1rem; }
+  .product a { height: 100%; display: grid; grid-template-rows: auto 1fr; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; color: var(--ink); text-decoration: none; }
+  .product a:hover { border-color: var(--accent); }
+  .product .pic { aspect-ratio: 1 / 1; background: var(--tint); }
+  .product img { width: 100%; height: 100%; object-fit: cover; display: block; color: transparent; }
+  .product .info { padding: 1rem 1.125rem 1.25rem; display: grid; gap: 0.375rem; align-content: start; }
+  .product .kind { font-size: 0.8125rem; font-weight: 600; color: var(--stage); }
+  .product h3 { font-family: var(--body); font-weight: 600; font-size: 1.0625rem; line-height: 1.35; }
+  .product .desc { color: var(--muted); font-size: 0.9375rem; line-height: 1.5; }
+  .product .go { font-size: 0.9375rem; font-weight: 600; color: var(--accent); padding-top: 0.25rem; }
   footer { border-top: 1px solid var(--line); }
   footer .wrap { padding-block: 2rem 3rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.75rem 2rem; color: var(--muted); font-size: 0.875rem; }
   .nd { display: inline-flex; align-items: center; gap: 0.625rem; max-width: 34rem; }
@@ -435,6 +445,30 @@
           <p><span class="ms">Lihat produk Naziera dan buat pesanan terus melalui kedainya di Etsy.</span><span class="en">Browse Naziera's products and order directly from her Etsy shop.</span></p>
           <a class="btn" href="https://www.etsy.com/shop/TheSENCorner" rel="noopener"><span class="ms">Lawati kedai di Etsy</span><span class="en">Visit the shop on Etsy</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
         </article>
+        <ul class="products">
+          <li class="product">
+            <a href="https://www.etsy.com/listing/4625881182/counting-1-10-maths-worksheets-autism" rel="noopener">
+              <span class="pic"><img src="https://i.etsystatic.com/69338207/r/il/5b3e15/8976613285/il_1080xN.8976613285_75mk.jpg" alt="Counting 1-10 Maths Worksheets" loading="lazy" width="1080" height="1080"></span>
+              <span class="info">
+                <span class="kind"><span class="ms">Muat turun digital · PDF</span><span class="en">Digital download · PDF</span></span>
+                <h3><span class="ms">Lembaran Kerja Matematik: Mengira 1 hingga 10</span><span class="en">Counting 1-10 Maths Worksheets</span></h3>
+                <span class="desc"><span class="ms">Bingkai sepuluh dan latihan menyurih nombor untuk kanak-kanak autisme dan SEN.</span><span class="en">Ten frames and number tracing for autistic and SEN children.</span></span>
+                <span class="go"><span class="ms">Lihat di Etsy ↗</span><span class="en">View on Etsy ↗</span></span>
+              </span>
+            </a>
+          </li>
+          <li class="product">
+            <a href="https://www.etsy.com/listing/4625860919/autism-adhd-printables-sen-mega-bundle" rel="noopener">
+              <span class="pic"><img src="https://i.etsystatic.com/69338207/r/il/28f766/8976501197/il_1080xN.8976501197_3ne1.jpg" alt="SEN Mega Bundle: Autism ADHD Printables" loading="lazy" width="1080" height="1080"></span>
+              <span class="info">
+                <span class="kind"><span class="ms">Muat turun digital · PDF</span><span class="en">Digital download · PDF</span></span>
+                <h3><span class="ms">SEN Mega Bundle: Bahan Cetak Autisme &amp; ADHD</span><span class="en">SEN Mega Bundle: Autism &amp; ADHD Printables</span></h3>
+                <span class="desc"><span class="ms">Jadual visual, kad emosi, cerita visual, sudut tenang dan alat sensori.</span><span class="en">Visual timetable, feelings cards, visual stories, calm corner and sensory tools.</span></span>
+                <span class="go"><span class="ms">Lihat di Etsy ↗</span><span class="en">View on Etsy ↗</span></span>
+              </span>
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
   </section>
