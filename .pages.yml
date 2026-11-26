@@ -1,5 +1,5 @@
 # Panel admin Pages CMS (https://app.pagescms.org)
-# Log masuk dengan GitHub, pilih repo ini, kemudian buka "Aktiviti Terkini".
+# Log masuk dengan GitHub, pilih repo ini, kemudian buka "Aktiviti Terkini" atau "Soal Jawab".
 media:
   input: images/aktiviti
   output: /images/aktiviti
@@ -41,4 +41,36 @@ content:
       - name: cerita_en
         label: Cerita (English, pilihan)
         description: Kosongkan jika tiada. Laman versi English akan guna cerita BM.
+        type: text
+  - name: soaljawab
+    label: Soal Jawab
+    description: Soalan pelawat sampai ke e-mel nazieraaziz92@gmail.com. Untuk menjawab secara awam, tambah item di sini (salin soalan, tulis jawapan). Hanya item yang ada jawapan dan bertanda "Paparkan" dipaparkan di laman. Jangan masukkan nama atau e-mel penanya.
+    type: file
+    path: data/soaljawab.json
+    format: json
+    list: true
+    fields:
+      - name: tarikh
+        label: Tarikh dijawab
+        type: date
+        required: true
+      - name: soalan
+        label: Soalan
+        description: Boleh dikemaskan sedikit (ejaan, buang maklumat peribadi) sebelum diterbitkan.
+        type: text
+        required: true
+      - name: jawapan
+        label: Jawapan
+        description: Tinggalkan satu baris kosong untuk perenggan baharu. Soalan tanpa jawapan tidak dipaparkan.
+        type: text
+      - name: paparkan
+        label: Paparkan di laman
+        description: Buang tanda untuk sembunyikan sementara tanpa memadam.
+        type: boolean
+        default: true
+      - name: soalan_en
+        label: Soalan (English, pilihan)
+        type: text
+      - name: jawapan_en
+        label: Jawapan (English, pilihan)
         type: text
