@@ -223,6 +223,17 @@
   .viewer .pos { position: fixed; bottom: 1.25rem; left: 0; right: 0; text-align: center; color: #ddd; font-size: 0.875rem; }
   @media (max-width: 600px) { .viewer .prev, .viewer .next { top: auto; bottom: 0.75rem; transform: none; } }
 
+  /* Kedai: Naziera's Etsy shop */
+  .shop { display: grid; grid-template-columns: auto 1fr; gap: 1rem 1.25rem; align-items: center; padding: 1.5rem; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; position: relative; overflow: hidden; }
+  .shop::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 4px; background: var(--spectrum); opacity: 0.85; }
+  .shop .ic { width: 3.25rem; height: 3.25rem; border-radius: 14px; display: grid; place-items: center; background: var(--s2); color: #2A2433; }
+  .shop .ic svg { width: 1.75rem; height: 1.75rem; }
+  .shop h3 { font-size: 1.5rem; line-height: 1.2; }
+  .shop .where { font-size: 0.8125rem; font-weight: 600; color: var(--stage); }
+  .shop p { grid-column: 1 / -1; color: var(--muted); }
+  .shop .btn { grid-column: 1 / -1; justify-self: start; display: inline-flex; align-items: center; gap: 0.5rem; min-height: 2.75rem; padding: 0.625rem 1.25rem; border-radius: 999px; background: var(--accent); color: var(--surface); font: 600 0.9375rem/1 var(--body); text-decoration: none; }
+  .shop .btn:hover { filter: brightness(1.08); }
+  .shop .btn svg { width: 1rem; height: 1rem; }
   footer { border-top: 1px solid var(--line); }
   footer .wrap { padding-block: 2rem 3rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.75rem 2rem; color: var(--muted); font-size: 0.875rem; }
   .nd { display: inline-flex; align-items: center; gap: 0.625rem; max-width: 34rem; }
@@ -242,6 +253,7 @@
           <li><a href="#research"><span class="ms">Kajian</span><span class="en">Research</span></a></li>
           <li><a href="#education"><span class="ms">Pendidikan</span><span class="en">Education</span></a></li>
           <li id="nav-aktiviti" hidden><a href="#aktiviti"><span class="ms">Aktiviti</span><span class="en">Activities</span></a></li>
+          <li><a href="#kedai"><span class="ms">Kedai</span><span class="en">Shop</span></a></li>
           <li><a href="#contact"><span class="ms">Hubungi</span><span class="en">Contact</span></a></li>
         </ul>
       </nav>
@@ -406,6 +418,23 @@
       <div class="content">
         <div class="posts" id="posts"></div>
         <button type="button" class="more" id="posts-more" hidden><span class="ms">Lihat aktiviti lain</span><span class="en">Show more activities</span></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="kedai">
+    <div class="wrap">
+      <h2><span class="ms">Kedai</span><span class="en">Shop</span></h2>
+      <div class="content">
+        <article class="shop">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5 5.5 4h13L20 9.5"/><path d="M4 9.5a2.67 2.67 0 0 0 5.33 0 2.67 2.67 0 0 0 5.34 0 2.67 2.67 0 0 0 5.33 0"/><path d="M5 12v8h14v-8"/><path d="M10 20v-4.5h4V20"/></svg></span>
+          <div>
+            <span class="where"><span class="ms">Kedai dalam talian di Etsy</span><span class="en">Online shop on Etsy</span></span>
+            <h3>The SEN Corner</h3>
+          </div>
+          <p><span class="ms">Lihat produk Naziera dan buat pesanan terus melalui kedainya di Etsy.</span><span class="en">Browse Naziera's products and order directly from her Etsy shop.</span></p>
+          <a class="btn" href="https://www.etsy.com/shop/TheSENCorner" rel="noopener"><span class="ms">Lawati kedai di Etsy</span><span class="en">Visit the shop on Etsy</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+        </article>
       </div>
     </div>
   </section>
